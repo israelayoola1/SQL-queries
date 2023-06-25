@@ -1,0 +1,32 @@
+--Duplicate Emails
+
+SELECT
+    email, COUNT(email) AS duplicate_count
+FROM employee
+GROUP BY email
+HAVING COUNT(email)>1;
+
+--Most Profitable Companies
+
+WITH T AS 
+(
+    SELECT
+        company, profits,
+        DENSE_RANK() OVER (ORDER by profits DESC) as r
+    FROM forbes_global_2010_2014
+)
+
+SELECT
+    company, profits
+FROM T
+LIMIT 3
+
+--Workers With The Highest Salaries
+
+SELECT t.worker_title
+FROM worker AS w
+JOIN title AS t ON w.worker_id = t.worker_ref_id
+WHERE w.salary = (
+    SELECT MAX(salary)
+    FROM worker
+);
